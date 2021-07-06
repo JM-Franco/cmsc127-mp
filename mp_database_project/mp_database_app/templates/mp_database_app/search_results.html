@@ -1,0 +1,59 @@
+{% extends 'mp_database_app/main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="row align-items-center justify-content-center m-5">
+	{% if searched %}
+		<p class="display-6 text-center py-5">You searched for "{{searched}}"</p>
+	{% else %}
+		<p class="display-6 text-center py-5">Displaying all recipes</p>
+	{% endif %}
+  	<div class="col-8">
+		<form class="d-flex input-group-lg flex-nowrap" action="" method="post">
+			{% csrf_token %}
+		    <input type="text" class="form-control" placeholder="Search our Recipes" aria-label="Search recipes" aria-describedby="search-button" name="search">
+		    <button class="btn search-button" type="submit" id="search-button"><i class="fa fa-search"></i></button>
+		</form>
+	</div>	
+</div>
+
+<hr>
+
+<!-- <div class="row m-5">
+	<div class="col-2">
+		<img src="https://via.placeholder.com/150" alt="">
+	</div>
+	<div class="col-10">
+		<div class="card">
+	      	<div class="card-body">
+		        <h5 class="card-title">Card title</h5>
+		        <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+	 	    </div>
+	    </div>
+	</div>
+</div> -->
+
+
+<div class="container mb-3">
+	{% if results %}
+		{% for result in results %}
+		<a href="{% url 'recipe' result.slug %}">
+			<div class="card my-3 flex-row flex-wrap recipes-display zoom-shadow">
+				<img class="rounded-start" src="{{result.image.url}}" alt="" style="width:18.75em; height: 9.375em; object-fit:cover">
+				<div class="card-body px-3">
+					<h4 class="card-title">{{result.name}}</h4>
+					<p class="card-text">{{result.difficulty}}</p>
+					<small class="card-text">
+						<img src="{{result.author.userdetails.profile_pic.url}}" class="rounded-circle" style="width: 2.813em; height: 2.813em" alt="">
+						&nbspby {{result.author.username}}
+					</small>
+				</div>
+			</div>
+		</a>
+		{% endfor %}
+	{% else %}
+		<p class="display-5 text-center my-5 py-5">No results found for "{{searched}}"</p>
+	{% endif %}
+</div>
+
+{% endblock content %}

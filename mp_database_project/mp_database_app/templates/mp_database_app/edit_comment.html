@@ -1,0 +1,20 @@
+{% extends 'mp_database_app/main.html' %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row m-5">
+        <div class="col">
+            <form action="" method="post">
+                {% csrf_token %}
+                {{form.comment}}
+                <div class="row my-3">
+                    <button type="submit" class="btn btn-dark btn-lg text-center">Confirm Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

@@ -1,0 +1,65 @@
+{% extends 'mp_database_app/main.html' %}
+
+{% block content %}
+
+
+<div class="container-fluid">
+<div class="row justify-content-center">
+<div class="col-md-6 m-4">
+    <h1 class="ms-4">Join us!</h1>
+    <p class="ms-4">Please fill up the following fields</p>
+    <div class="card shadow-md p-4 text-dark">
+    	
+        <form action="" method="post">
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+            {{form.first_name}}
+            <label for="floatingFname">First Name</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{form.last_name}}
+            <label for="floatingLname">Last Name</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{form.username}}
+            <label for="floatingUsername">Username</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{form.email}}
+            <label for="floatingEmail">Email</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{form.password1}}
+            <label for="floatingPass">Password</label>
+        </div>
+        <div class="form-floating mb-3">
+            {{form.password2}}
+            <label for="floatingPass">Confirm Password</label>
+        </div>
+        <!-- <div class="form-floating mb-3">
+            <input type="tel" class="form-control" id="floatingTelnumber" placeholder="LastTelnumber">
+            <label for="floatingTelnumber">Telephone Number</label>
+        </div> -->
+
+        {% if form.errors %}
+        <div class="alert alert-fixed alert-danger alert-dismissible fade show" role="alert">
+            {% for key, value in form.errors.items %}
+            <strong>ERROR:</strong> {{value | striptags}} <br>
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+
+        <div class="d-grid">
+            <button type="submit" class="btn btn-lg text-center btn-style-1">SIGN UP</button>
+        </div>
+
+       
+        </form>
+    </div>
+</div>
+</div>
+</div>
+
+
+{% endblock content %}

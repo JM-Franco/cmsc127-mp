@@ -1,0 +1,63 @@
+{% extends 'mp_database_app/main.html' %}
+
+{% block content %}
+
+<div class="container-fluid home-content">
+	<div class="row align-items-center justify-content-center">
+		<div class="col text-center align-items-center text-light">
+			<p class="display-5 fw-bold">Welcome to RECIPEEEEEZY!</p>
+			<p>Browse our catalog of recipes on dishes that you crave</p>
+	  	</div>
+  	</div>
+  	<div class="row align-items-center justify-content-center pt-5">
+	  	<div class="col-8">
+			<form action="{% url 'search_results' %}" class="d-flex input-group-lg flex-nowrap" method="POST">
+				{% csrf_token %}
+			    <input type="text" class="form-control" placeholder="Search our recipes. Tip: you can separate queries by spaces" aria-label="Search recipes" aria-describedby="search-button" name="search">
+			    <button type="submit" class="btn search-button"><i class="fa fa-search"></i></button>
+			</form>
+		</div>	
+	</div>	
+</div>
+
+
+{% if request.user.is_authenticated %}
+<div class="container-fluid home-content-2" style="margin-bottom: 0px;">
+	<div class="row align-items-center justify-content-center">
+		<div class="col text-center text-light">
+			<p class="display-5 fw-bold">Browse Our Catalog of Recipes</p>
+			<div class="pt-5">
+				<a href="{% url 'recipes' %}" class="btn mx-auto btn-style-1" style="font-size: 25px;padding-top: 1rem;height: 75px; width: 500px">Go to our recipes page</a>
+			</div>
+	  	</div>
+  	</div>
+</div>
+{% else %}
+<div class="container-fluid home-content-2" style="margin-bottom: 0px;">
+	<div class="row align-items-center justify-content-center">
+		<div class="col text-center text-light">
+			<p class="display-5 fw-bold">Join Us to Have Access to All of Our Recipes!</p>
+			<div class="pt-5">
+				<a href="{% url 'register' %}" class="btn mx-auto btn-style-1" style="font-size: 25px;padding-top: 1rem;height: 75px; width: 500px">Register for an account now!</a>
+			</div>
+	  	</div>
+  	</div>
+</div>
+{% endif %}
+
+
+{% for message in messages %}
+	{% if 'success' == message.tags %}
+		<div class="alert alert-fixed alert-success alert-dismissible fade show" role="alert">
+		    <strong>Success!</strong> {{message | striptags}} <br>
+		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	{% else %}
+		<div class="alert alert-fixed alert-danger alert-dismissible fade show" role="alert">
+		    <strong>Error!</strong> {{message | striptags}} <br>
+		    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+		</div>
+	{% endif %}
+{% endfor %}
+
+{% endblock content %}

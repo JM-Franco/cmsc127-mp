@@ -1,0 +1,112 @@
+{% extends 'mp_database_app/main.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid">
+<div class="row m-5 justify-content-center">
+<div class="col-md-10 m-4">
+    <h1 class="ms-4">Publish Your Own Recipe!</h1>
+    <p class="ms-4 mb-5">Fill up the following details</p>
+    <div class="card shadow-md p-4 text-dark">
+        
+        <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="row">
+            <div class="col">
+                <div class="form-group mb-3">
+                    <label for="inputName">Name of Dish</label>
+                    {{form.name}}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-group mb-3">
+                    <label for="inputImage">Image</label>
+                    {{form.image}}
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="form-group mb-3">
+                    <label for="inputDifficulty">Difficulty of Dish</label>
+                    {{form.difficulty}}
+                </div>
+                <div class="form-group mb-3">
+                    <label for="inputServing">Serving Size</label>
+                    {{form.serving}}
+                </div>
+            </div>
+            <div class="col">
+                <label for="preparationtime">Preparation Time</label>
+                <div id="preparationtime">
+                    <div class="row mb-3">
+                        <label for="inputPhours" class="col col-form-label">Hours</label>
+                        <div class="col mb-3">
+                            {{form.phours}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="inputPmins" class="col col-form-label">Minutes</label>
+                        <div class="col mb-3">
+                            {{form.pminutes}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <label for="cookingtime">Cooking Time</label>
+                <div id="cookingtime">
+                    <div class="row mb-3">
+                        <label for="inputChours" class="col col-form-label">Hours</label>
+                        <div class="col mb-3">
+                            {{form.chours}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label for="inputCmins" class="col col-form-label">Minutes</label>
+                        <div class="col mb-3">
+                            {{form.cminutes}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group mb-3">
+            <label for="inputEquipment">Utensils Needed</label>
+            {{form.equipment}}
+        </div>
+        <div class="form-group mb-3">
+            <label for="inputIngredients">Ingredients Needed</label>
+            {{form.ingredients}}
+        </div>
+         <div class="form-group mb-3">
+            <label for="inputProcedures">Procedures</label>
+            {{form.procedures}}
+        </div>
+        
+
+
+        {% if form.errors %}
+        <div class="alert alert-fixed alert-danger alert-dismissible fade show" role="alert">
+            {% for key, value in form.errors.items %}
+            <strong>ERROR:</strong> {{value | striptags}} <br>
+            {% endfor %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+
+        <div class="d-grid">
+            <button type="submit" class="btn btn-lg text-center btn-style-1">FINISH</button>
+        </div>
+
+
+        </form>
+        
+    </div>
+</div>
+</div>
+</div>
+
+{% endblock content %}

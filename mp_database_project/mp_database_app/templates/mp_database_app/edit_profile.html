@@ -1,0 +1,81 @@
+{% extends 'mp_database_app/main.html' %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <div class="row h-100">
+        <div class="col-3 bg-dark">
+            <div class="profile-picture" style="margin-left: 1rem; margin-top: 6rem"> 
+                <img src="{{request.user.userdetails.profile_pic.url}}" style="border-radius: 500px; width: 300px; height: 300px" alt="">
+            </div>
+        </div>
+        <div class="col-9 p-5">
+        	<form action="" method="post" enctype="multipart/form-data">
+        		{% csrf_token %}
+	            <div class="row">
+	                <div class="col">
+	                	<h5>FIRST NAME</h5>
+						<div class="form-floating mb-3">
+							{{userform.first_name}}
+							<label for="floatingFname">First Name</label>
+						</div>
+	                </div>
+	                <div class="col">
+	                    <h5>LAST NAME</h5>
+		                    <div class="form-floating mb-3">
+		                    {{userform.last_name}}
+		                    <label for="floatingLname">Last Name</label>
+	                	</div>
+	                </div>
+	            </div>
+	            <br><br>
+	            <div class="row">
+	                <div class="col">
+	                    <h5>USERNAME</h5>
+		                    <div class="form-floating mb-3">
+		                    {{userform.username}}
+		                    <label for="floatingUsername">Username</label>
+	                	</div>
+	                </div>
+	                <div class="col">
+	                    <h5>EMAIL</h5>
+		                    <div class="form-floating mb-3">
+		                    {{userform.email}}
+		                    <label for="floatingEmail">Email</label>
+	                	</div>
+	                </div>
+	            </div>
+	            <br><br>
+	            <div class="row">
+	                <div class="col">
+	                    <h5>PHONE</h5>
+		                    <div class="form-floating mb-3">
+		                    {{userdetailform.phone}}
+		                    <label for="floatingPhone">Phone</label>
+	                	</div>
+	                </div>
+					<div class="col">
+	                    <h5>PROFILE PICTURE</h5>
+		                {{userdetailform.profile_pic}}
+	                </div>
+	            </div>
+				
+				{% if userform.errors %}
+				<div class="alert alert-fixed alert-danger alert-dismissible fade show" role="alert">
+					{% for key, value in userform.errors.items %}
+					<strong>ERROR:</strong> {{value | striptags}} <br>
+					{% endfor %}
+					<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+				</div>
+				{% endif %}
+
+	            <div class="row mt-5 pt-5">
+	                <div class="d-grid col"><button type="submit" class="btn btn-success btn-lg text-center">Confirm</button></div>
+	            </div>
+        	</form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content %}

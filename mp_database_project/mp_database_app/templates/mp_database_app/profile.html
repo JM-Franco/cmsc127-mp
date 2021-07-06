@@ -1,0 +1,254 @@
+{% extends 'mp_database_app/main.html' %}
+
+{% block content %}
+<style>
+    .card-title {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+</style>
+
+<div class="container-fluid">
+    <div class="row h-100">
+        <div class="d-flex align-items-center col-3 bg-dark">
+            <div class="my-auto" style="margin-left: 1rem; margin-top: 6rem"> 
+                <img src="{{user.userdetails.profile_pic.url}}" class="rounded-circle" style="width: 300px; height: 300px;" alt="">
+            </div>
+        </div>
+        <div class="col-9 p-5">
+            <div class="row">
+                <div class="col">
+                    <h5>FIRST NAME</h5>
+                    {{user.first_name}}
+                </div>
+                <div class="col">
+                    <h5>LAST NAME</h5>
+                    {{user.last_name}}
+                </div>
+            </div>
+            <br><br>
+            <div class="row">
+                <div class="col">
+                    <h5>USERNAME</h5>
+                    {{user.username}}
+                </div>
+                <div class="col">
+                    <h5>EMAIL</h5>
+                    {{user.email}}
+                </div>
+            </div>
+            <br><br>
+            <div class="row">
+                <div class="col">
+                    <h5>PHONE</h5>
+                    {{userdetails.phone}}
+                </div>
+                <div class="col">
+                    <h5>DATE JOINED</h5>
+                    {{userdetails.date_created}}
+                </div>
+            </div>
+            {% if request.user == user %}
+            <div class="row mt-5 pt-5">
+                <div class="col"><a href="{% url 'edit_profile' %}" class="d-block btn btn-dark btn-lg text-center"><i class="fas fa-user-edit"></i>&nbsp&nbspEdit Account Details</a></div>
+            </div>
+            {% endif %}
+        </div>
+{% for message in messages %}
+    {% if 'success' == message.tags %}
+            <div class="alert alert-fixed alert-success alert-dismissible fade show" role="alert">
+                <strong>Success!</strong> {{message | striptags}} <br>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+    {% endif %}
+{% endfor %}
+    </div>
+</div>
+
+{% if request.user == user %}
+<div class="container-fluid home-content-2 py-3">
+    <div class="row">
+        <div class="col p-5">
+            <h2 class="mb-5"><i class="fas fa-heart"></i> Favorites</h2>
+            {% if favorites %}
+                {% for favorite in favorites %}
+                    <div class="d-flex justify-content-center">
+                        <div class="card my-3 col-8 flex-row flex-wrap recipes-display zoom-shadow" style="background-color: #9c0d00;">
+                            <a href="{% url 'recipe' favorite.recipe.slug %}" class="link-no-decor">
+                                <img class="rounded-start" src="{{favorite.recipe.image.url}}" alt="" style="width:18.75em; height: 9.375em; object-fit:cover" alt="">
+                            </a>
+                            <div class="card-body px-3">
+                                <a href="{% url 'recipe' favorite.recipe.slug %}" class="link-no-decor">
+                                <h4 class="card-title">{{favorite.recipe.name}}</h4>
+                                <p class="card-text">{{favorite.recipe.difficulty}}</p>
+                                </a>
+                            </div>
+
+                            <div class="row" style="width: 15rem; margin: 1px">
+                                <form action="{% url 'add_fav' favorite.recipe.id %}" class="w-100 p-0">
+                                    <button class="h-100 w-100 btn btn-danger"><i class="fas fa-trash fs-4"></i>&nbsp&nbspRemove from favorites</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p class="text-center fs-5">You have not favorited anything yet</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<div class="container-fluid {% if request.user == user %}home-content{% else %}home-content-2{% endif %} py-3">
+    <div class="row">
+        <div class="col p-5">
+            <h2 class="mb-5"><i class="fas fa-pen-alt"></i> Published Recipes</h2>
+            {% if recipes %}
+                {% for recipe in recipes %}
+                    <div class="d-flex justify-content-center">
+                        <div class="card my-3 col-8 flex-row flex-wrap recipes-display zoom-shadow" {% if request.user != user %}style="background-color: #9c0d00;"{% endif %}>
+                            <a href="{% url 'recipe' recipe.slug %}" class="link-no-decor">
+                                <img class="rounded-start" src="{{recipe.image.url}}" alt="" style="width:18.75em; height: 9.375em; object-fit:cover" alt="">
+                            </a>
+                            <div class="col-4 card-body px-3">
+                                <a href="{% url 'recipe' recipe.slug %}" class="link-no-decor">
+                                <h4 class="card-title">{{recipe.name}}</h4>
+                                <p class="card-text">{{recipe.difficulty}}</p>
+                                <p class="card-text lh-1"><small>{{recipe.date_created}} <br>
+                                {% if recipe.last_modified %}
+                                <em>edited at {{recipe.last_modified}}</em>
+                                {% endif %}</small></p>
+                                </a>
+                            </div>
+                            {% if request.user == user %}
+                            <div class="row" style="width: 15rem; margin: 1px">
+                                <form action="{% url 'edit_recipe' recipe.slug %}" class="w-100 p-0">
+                                    <button class="h-100 w-100 btn btn-dark"><i class="far fa-edit fs-4"></i>&nbsp&nbspEdit Recipe</button>
+                                </form>
+                                    <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_recipe_{{recipe.id}}"><i class="far fa-trash-alt fs-4"></i>&nbsp&nbspDelete Recipe</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="modal fade text-dark" id="delete_recipe_{{recipe.id}}" tabindex="-1" aria-label="exampleModalLabel" aria-hidden="true" style>
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Delete Recipe Confirmation</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    Are you sure you want to delete {{recipe.name}}?
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="{% url 'delete_recipe' recipe.id %}" class="btn btn-outline-success">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </a>
+                                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                                        <i class="fas fa-times"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            {% else %}
+                {% if request.user == user %}
+                    <p class="text-center fs-5">You have not published any recipes yet</p>
+                    <div class="row mx-3 justify-content-center">
+                        <a href="{% url 'add_recipe' %}" class="col-2 btn btn-lg btn-style-2">Publish a Recipe</a>
+                    </div>
+                {% else %}
+                    <p class="text-center fs-5">{{user.username}} has not published any recipes yet</p>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+ 
+
+<div class="container-fluid {% if request.user == user %}home-content-2{% else %}home-content{% endif %} py-3">
+    <div class="row">
+        <div class="col p-5">
+    <h2 class="mb-5"><i class="fas fa-comment"></i> Comments</h2>
+        {% if comments %}
+            {% for comment in comments %}
+            <div class="d-flex justify-content-center">
+                <div class="card col-8 my-3 flex-row flex-wrap recipes-display zoom-shadow" {% if request.user == user %}style="background-color: #9c0d00;"{% endif %}>
+                    <div class="card-body px-3">
+                        <a href="{% url 'recipe' comment.recipe.slug %}" class="link-no-decor">
+                            <p class="card-text">On {{comment.recipe.name}}</p>
+                            <p class="card-text fs-4">{{comment.comment}}</p>
+                            <p class="card-text lh-1"><small>{{comment.date_created}} <br>
+                            {% if comment.last_modified %}
+                            <em>edited at {{comment.last_modified}}</em>
+                            {% endif %}</small></p>
+                        </a>
+                    </div>
+                    {% if request.user == user %}
+                    <div class="row" style="width: 15rem; margin: 1px">
+                        <form action="{% url 'edit_comment' comment.id %}" class="w-100 p-0">
+                            <button class="h-100 w-100 btn btn-dark"><i class="far fa-edit fs-4"></i>&nbsp&nbspEdit Comment</button>
+                        </form>
+                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#delete_comment_{{comment.id}}"><i class="far fa-trash-alt fs-4"></i>&nbsp&nbspDelete Comment</button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="modal fade text-dark" id="delete_comment_{{comment.id}}" tabindex="-1" aria-label="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Delete Comment Confirmation</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete this comment?
+                        </div>
+                        <div class="modal-footer">
+                            <a href="{% url 'delete_comment' comment.id %}" class="btn btn-outline-success">
+                                <i class="fas fa-trash"></i> Delete
+                            </a>
+                            <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                                <i class="fas fa-times"></i> Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center fs-5">You have not commented anything yet</p>
+        {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- <div class="modal fade" id="delete_comment_{{comment.id}}" tabindex="-1" aria-label="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Comment Confirmation</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this comment?
+            </div>
+            <div class="modal-footer">
+                <a href="" class="btn btn-outline-success">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+                <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div> -->
+
+{% endblock content %}

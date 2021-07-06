@@ -1,0 +1,116 @@
+{% extends 'mp_database_app/main.html' %}
+{% load static %}
+{% block content %}
+
+<!-- 
+    TODO
+    - Make sidebar collapsible when size is sm
+ -->
+
+<div class="container-fluid position-sticky">
+  <div class="row flex-nowrap">
+      <div class="col-auto col-md-4 col-xl-3 px-sm-1 px-0 bg-dark">
+            <div class="d-flex flex-column align-items-center align-items-sm-start px-3 pt-2 text-white min-vh-100">
+                <a href="{% url 'recipes' %}" class="d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                    <span class="display-5 d-none d-sm-inline">All Meals</span>
+                </a>
+                
+                <ul class="nav flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start" id="menu">
+                    <div class="col">
+                        <form class="d-flex input-group-lg flex-nowrap" action="" method="post">
+                            {% csrf_token %}
+                            <input type="text" class="form-control" placeholder="Filter by name or ingredient used" aria-label="Search recipes" aria-describedby="search-button" name="search">
+                            <button class="btn btn-style-1" type="submit" id="search-button"><i class="fa fa-search"></i></button>
+                        </form>
+                    </div>	
+                    {% if search %}
+                        <small class="my-3">Showing results for "{{search}}"</small>
+                    {% else %}
+                        
+                    {% endif %}
+                    <!-- <li>
+                        <a href="#submenu1" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <span class="ms-1 d-none d-sm-inline">Alphabetical Order</span> </a>
+                        <ul class="collapse nav flex-column ms-1" id="submenu1" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a href="#" class="nav-link px-0"> A </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> B </a>
+                            </li>
+                        </ul>
+                    </li> -->
+                    <!-- <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                           <span class="ms-1 d-none d-sm-inline">B</span></a>
+                    </li>
+                    <li>
+                        <a href="#submenu2" data-bs-toggle="collapse" class="nav-link px-0 align-middle ">
+                            <span class="ms-1 d-none d-sm-inline">C</span></a>
+                        <ul class="collapse nav flex-column ms-1" id="submenu2" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 1</a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Item</span> 2</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#submenu3" data-bs-toggle="collapse" class="nav-link px-0 align-middle">
+                            <span class="ms-1 d-none d-sm-inline">D</span> </a>
+                            <ul class="collapse nav flex-column ms-1" id="submenu3" data-bs-parent="#menu">
+                            <li class="w-100">
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 1</a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 2</a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 3</a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link px-0"> <span class="d-none d-sm-inline">Product</span> 4</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#" class="nav-link px-0 align-middle">
+                            <span class="ms-1 d-none d-sm-inline">E</span> </a>
+                    </li> -->
+                </ul>
+                <hr>
+                    <!-- <a href="" class="align-self-center btn btn-style-1 pb-4">Something</a> -->
+            </div>
+        </div>
+      <div class="col py-3">
+        <div class="container">
+            <div class="row gx-3 gy-5">
+                <div class="col">
+                    {% if recipes %}
+                        {% for recipe in recipes %}
+                            <a href="{% url 'recipe' recipe.slug %}">
+                                <div class="card my-3 flex-row flex-wrap recipes-display zoom-shadow">
+                                    <img class="rounded-start" src="{{recipe.image.url}}" alt="" style="width:18.75em; height: 9.375em; object-fit:cover">
+                                    <div class="card-body px-3">
+                                        <h4 class="card-title">{{recipe.name}}</h4>
+                                        <p class="card-text">{{recipe.difficulty}}</p>
+                                        <small class="card-text">
+                                            <img src="{{recipe.author.userdetails.profile_pic.url}}" class="rounded-circle" style="width: 2.813em; height: 2.813em" alt="">
+                                            &nbspby {{recipe.author.username}}
+                                        </small>
+                                    </div>
+                                </div>
+                            </a> 
+                        {% endfor %}
+                    {% else %}
+                    <p class="text-center display-5 my-5">No results found</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+      </div>
+  </div>
+</div>
+
+{% endblock content %}
